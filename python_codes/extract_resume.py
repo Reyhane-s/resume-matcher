@@ -79,4 +79,6 @@ for i in range(data.shape[0]):
 data["Clean_Resume"] = clean
 data["skills"] = data["Clean_Resume"].str.lower().apply(get_skills)
 data["skills"] = data["skills"].apply(unique_skills)
-print(data["skills"])
+#print(data.iloc[0])
+print(data["skills"].iloc[0])
+#print(data["skills"])
