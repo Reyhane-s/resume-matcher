@@ -36,7 +36,7 @@ top_5 = similarities[:5]
 # نمایش نتایج
 print("\nTop 5 matching rows:")
 for idx, similarity, common_skills in top_5:
-    print(f"Row index: {idx}, Similarity: {similarity*100:.2f}%")
+    print(f"Row index: {idx}, Similarity: {similarity:.2f}%")
     print(f"Common skills: {list(common_skills)}")
     print(ex.data.loc[idx].to_dict())
     print()

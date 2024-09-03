@@ -66,7 +66,9 @@ doc = nlp(test_text)
 for ent in doc.ents:
     print(ent.text, ent.label_)
 
-for i, resume in enumerate(data["Clean_Resume"].iloc[:20]):  # تست با داده‌های تمیز شده
+age=0
+
+for i, resume in enumerate(data["Clean_Resume"]):  # تست با داده‌های تمیز شده
     print(f"Cleaned Resume {i+1}: {resume}")
     doc = nlp(resume)
     list1 = []
@@ -83,7 +85,7 @@ for i, resume in enumerate(data["Clean_Resume"].iloc[:20]):  # تست با دا�
        list2.sort()
        list3.extend(list2)
 
-       #print(list2)
+      # print(list2)
        #print("#######")
     print(list3)
     for string in list3:
@@ -91,14 +93,20 @@ for i, resume in enumerate(data["Clean_Resume"].iloc[:20]):  # تست با دا�
 
             number = int(string)
             # بررسی اینکه آیا عدد در محدوده مورد نظر است
-            if 1970 <= number <= 2003:
+            if 1970 <= number <= 2003 :
+                number=2024-number
                 filtered_numbers.append(number)
+                continue
+            if 20 <= number <= 35:
+                 filtered_numbers.append(number)
+
+
+
     if filtered_numbers:
-        min_number = min(filtered_numbers)
-        age=2024 - min_number
-        print(f"Age is:  {age}")
+        age = max(filtered_numbers)
+
+        print(f"Age is:  {age})")
     else:
         print("NO INFORMATION FOUND IN")
 
-    #print(filtered_numbers)
     print("------")

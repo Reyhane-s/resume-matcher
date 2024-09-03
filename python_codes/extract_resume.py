@@ -32,7 +32,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
-print("Hello")
+
 df = pd.read_csv("../resume dataset/Resume.csv")
 df = df.reindex(np.random.permutation(df.index))
 data = df.copy().iloc[
