@@ -1,43 +1,3 @@
-#spacy
-import spacy
-#Data loading/ Data manipulation
-import pandas as pd
-import numpy as np
-
-#nltk
-import re
-import nltk
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
-nltk.download(['stopwords','wordnet'])
-
-#warning
-import warnings
-warnings.filterwarnings('ignore')
-df = pd.read_csv("../resume dataset/Resume.csv")
-df = df.reindex(np.random.permutation(df.index))
-data = df.copy().iloc[
-    0:200,
-]
-print(data.head())
-nlp = spacy.load("en_core_web_lg")
-age_pattern_path = "../pattern dataset/certification.jsonl"
-ruler = nlp.add_pipe("entity_ruler")
-ruler.from_disk(age_pattern_path)
-print(nlp.pipe_names)
-def get_age(text):
-    doc = nlp(text)
-    myset = []
-    subset = []
-    for ent in doc.ents:
-        if ent.label_ == "DEGREE":
-            subset.append(ent.text)
-    myset.append(subset)
-    return subset
-
-def unique_degrees(x):
-    return list(set(x))
-
 def get_highest_degree(degrees):
     # دیکشنری برای نگاشت اشکال مختلف مدارک به یک مقدار ثابت
     degree_aliases = {
@@ -83,30 +43,7 @@ def get_highest_degree(degrees):
 
     return highest_degree
 
-
-
-
-clean = []
-for i in range(data.shape[0]):
-    review = re.sub(
-        '(@[A-Za-z]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)|^rt|http.+?"',  # اصلاح الگو برای حفظ اعداد
-        " ",
-        data["Resume_str"].iloc[i],
-    )
-    review = review.lower()
-    review = review.split()
-    lm = WordNetLemmatizer()
-    review = [
-        lm.lemmatize(word)
-        for word in review
-        if not word in set(stopwords.words("english"))
-    ]
-    review = " ".join(review)
-    clean.append(review)
-
-data["Clean_Resume"] = clean
-data["certif"] = data["Clean_Resume"].str.lower().apply(get_age)
-data["certif"] = data["certif"].apply(unique_degrees)
-data["certif"] = data["certif"].apply(get_highest_degree)
-
-print(data["certif"].iloc[1:20])
+# مثال
+#degrees_list = ["b.s.", "ms", "high school", "ph.d.", "associate", "m.eng"]
+#highest_degree = get_highest_degree(degrees_list)
+#print("Highest Degree:", highest_degree)  # خروجی: postdoc

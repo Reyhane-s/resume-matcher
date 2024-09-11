@@ -15,31 +15,23 @@ nltk.download(['stopwords','wordnet'])
 import warnings
 warnings.filterwarnings('ignore')
 df = pd.read_csv("../resume dataset/Resume.csv")
-df = df.reindex(np.random.permutation(df.index))
+#df = df.reindex(np.random.permutation(df.index))
 data = df.copy().iloc[
-    0:200,
+    200:400,
 ]
 print(data.head())
 nlp = spacy.load("en_core_web_lg")
-age_pattern_path = "../pattern dataset/age.jsonl"
-ruler = nlp.add_pipe("entity_ruler")
-ruler.from_disk(age_pattern_path)
+#age_pattern_path = "../pattern dataset/age.jsonl"
+#ruler = nlp.add_pipe("entity_ruler")
+#ruler.from_disk(age_pattern_path)
 print(nlp.pipe_names)
-def get_age(text):
-    doc = nlp(text)
-    myset = []
-    subset = []
-    for ent in doc.ents:
-        if ent.label_ == "AGE":
-            subset.append(ent.text)
-    myset.append(subset)
-    return subset
+
 
 clean = []
 for i in range(data.shape[0]):
     review = re.sub(
         '(@[A-Za-z]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)|^rt|http.+?"',  # اصلاح الگو برای حفظ اعداد
-        " ",
+        "  ",
         data["Resume_str"].iloc[i],
     )
     review = review.lower()
@@ -54,59 +46,58 @@ for i in range(data.shape[0]):
     clean.append(review)
 
 data["Clean_Resume"] = clean
-data["age"] = data["Clean_Resume"].str.lower().apply(get_age)
-print(data["age"].iloc[1:20])
+
 
 # Debugging: Check loaded patterns
-print(ruler.patterns)  # Ensure patterns are loaded correctly
+#print(ruler.patterns)  # Ensure patterns are loaded correctly
 
 # Debugging: Test simple text directly
-test_text = "I was born in 1990 and I'm 30 years old."
-doc = nlp(test_text)
-for ent in doc.ents:
-    print(ent.text, ent.label_)
+#test_text = "I was born in 1990 and I'm 30 years old."
+#doc = nlp(test_text)
+#for ent in doc.ents:
+ #   print(ent.text, ent.label_)
 
-age=0
 
-for i, resume in enumerate(data["Clean_Resume"]):  # تست با داده‌های تمیز شده
-    print(f"Cleaned Resume {i+1}: {resume}")
+
+def extract_age(resume):
     doc = nlp(resume)
     list1 = []
-    list3=[]
+    list3 = []
     filtered_numbers = []
+
+    # استخراج موجودیت‌های با برچسب DATE
     for ent in doc.ents:
-
-        #print(ent.text, ent.label_)
-        if ent.label_ =="DATE":
+        if ent.label_ == "DATE":
             list1.append(ent.text)
-    print(list1)
-    for item in list1:
-       list2= item.split(" ")
-       list2.sort()
-       list3.extend(list2)
 
-      # print(list2)
-       #print("#######")
-    print(list3)
+    # پردازش مقادیر استخراج‌شده
+    for item in list1:
+        list2 = item.split(" ")
+        list2.sort()
+        list3.extend(list2)
+
+    # فیلتر کردن اعداد مورد نظر
     for string in list3:
         if string.isdigit():
-
             number = int(string)
-            # بررسی اینکه آیا عدد در محدوده مورد نظر است
-            if 1970 <= number <= 2003 :
-                number=2024-number
+            if 1970 <= number <= 2003:
+                number = 2024 - number
                 filtered_numbers.append(number)
                 continue
             if 20 <= number <= 35:
-                 filtered_numbers.append(number)
+                filtered_numbers.append(number)
 
-
-
+    # بازگشت مقدار سن، اگر موجود بود
     if filtered_numbers:
-        age = max(filtered_numbers)
-
-        print(f"Age is:  {age})")
+        age = int(max(filtered_numbers))
+        return age
     else:
-        print("NO INFORMATION FOUND IN")
+        return None
 
-    print("------")
+
+data['Age'] = data["Clean_Resume"].apply(extract_age)
+data['Age'] = data['Age'].fillna(0).astype(int)
+print(data['Age'])
+count_zero_ages = (data['Age'] == 0).sum()
+
+print(f"تعداد مقادیر 0 در ستون Age: {count_zero_ages}")

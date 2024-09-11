@@ -1,4 +1,4 @@
-import extract_resume as ex
+import extract_skills as ex
 
 def jaccard_similarity(list1, list2):
     intersection = len(set(list1).intersection(set(list2)))

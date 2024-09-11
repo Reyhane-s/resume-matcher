@@ -1,4 +1,4 @@
-import extract_resume as ex
+import extract_skills as ex
 
 
 # تابع برای محاسبه شباهت دو لیست از کلمات

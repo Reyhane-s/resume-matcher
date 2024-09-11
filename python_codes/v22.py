@@ -40,23 +40,43 @@ data = df.copy().iloc[
 ]
 print(data.head())
 nlp = spacy.load("en_core_web_lg")
-skill_pattern_path = "../pattern dataset/jz_skill_patterns.jsonl"
+skill_pattern_path = "../pattern dataset/education_and_age_patterns.jsonl"
 ruler = nlp.add_pipe("entity_ruler")
 ruler.from_disk(skill_pattern_path)
 print(nlp.pipe_names)
-def get_skills(text):
+#def get_skills(text):
+ #   doc = nlp(text)
+  #  myset = []
+  #  subset = []
+  #  for ent in doc.ents:
+   #     if ent.label_ == "SKILL":
+    #        subset.append(ent.text)
+    #myset.append(subset)
+   # return subset
+
+def get_education(text):
     doc = nlp(text)
     myset = []
     subset = []
     for ent in doc.ents:
-        if ent.label_ == "SKILL":
+        if ent.label_ == "EDUCATION":
+            subset.append(ent.text)
+    myset.append(subset)
+    return subset
+
+def get_age(text):
+    doc = nlp(text)
+    myset = []
+    subset = []
+    for ent in doc.ents:
+        if ent.label_ == "AGE":
             subset.append(ent.text)
     myset.append(subset)
     return subset
 
 
-def unique_skills(x):
-    return list(set(x))
+#def unique_skills(x):
+  #  return list(set(x))
 
 clean = []
 for i in range(data.shape[0]):
@@ -77,8 +97,12 @@ for i in range(data.shape[0]):
     clean.append(review)
 
 data["Clean_Resume"] = clean
-data["skills"] = data["Clean_Resume"].str.lower().apply(get_skills)
-data["skills"] = data["skills"].apply(unique_skills)
+#data["skills"] = data["Clean_Resume"].str.lower().apply(get_skills)
+data["education"] = data["Clean_Resume"].str.lower().apply(get_education)
+data["age"] = data["Clean_Resume"].str.lower().apply(get_age)
+#data["skills"] = data["skills"].apply(unique_skills)
 #print(data.iloc[0])
-print(data["skills"].iloc[0])
+#print(data["skills"].iloc[0])
+print(data["education"].iloc[10])
+print(data["age"].iloc[10])
 #print(data["skills"])
