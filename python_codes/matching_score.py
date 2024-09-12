@@ -34,17 +34,20 @@ def calculate_total_score(skill_score, age_score, degree_score, skill_weight=0.8
     total_weight = skill_weight + age_weight + degree_weight
 
     # تنظیم وزن‌ها در صورت عدم وجود مقادیر
-    if age_score == 0:  # اگر سن موجود نیست
+    if age_score == 0:
         age_weight = 0
-    if degree_score == 0:  # اگر مدرک تحصیلی موجود نیست
+    if degree_score == 0:
         degree_weight = 0
 
     # تنظیم وزن مهارت‌ها باقیمانده وزن‌ها
     remaining_weight = 1 - (age_weight + degree_weight)
     skill_weight = remaining_weight if remaining_weight > 0 else 0.6
 
-    # محاسبه نمره نهایی با وزن‌های تنظیم شده
-    return (skill_score * skill_weight) + (age_score * age_weight) + (degree_score * degree_weight)
+    # محاسبه نمره نهایی
+    total_score = (skill_score * skill_weight) + (age_score * age_weight) + (degree_score * degree_weight)
+
+    # تبدیل نمره به درصد و گرد کردن به دو رقم اعشار
+    return round(total_score * 100, 2)
 
 # نمونه DataFrame با مقادیر از دست رفته
 

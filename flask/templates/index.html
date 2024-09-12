@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Matcher</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+   <div class="container">
+    <h1>Resume Matcher</h1>
+    <form action="/" method="POST">
+        <label for="skills">Skills (comma separated):</label>
+        <input type="text" id="skills" name="skills" required><br><br>
+
+        <label for="min_age">Minimum Age:</label>
+        <input type="number" id="min_age" name="min_age" required><br><br>
+
+        <label for="max_age">Maximum Age:</label>
+        <input type="number" id="max_age" name="max_age" required><br><br>
+
+        <label for="degree">Required Degree:</label>
+        <select id="degree" name="degree">
+            <option value="high school">High School</option>
+            <option value="associate">Associate</option>
+            <option value="bachelor">Bachelor</option>
+            <option value="master">Master</option>
+            <option value="phd">PhD</option>
+            <option value="postdoc">Postdoc</option>
+        </select><br><br>
+
+        <input type="submit" value="Find Top Resumes">
+    </form>
+   </div>
+</body>
+</html>

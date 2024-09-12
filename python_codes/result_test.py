@@ -1,13 +1,19 @@
-from extract_skills import get_skills
-from test4 import extract_numbers,extract_age
-from extract_degree import get_degree,unique_degrees,get_highest_degree
+import sys
+import os
+
+# اضافه کردن مسیر پروژه به مسیرهای Python
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from python_codes.extract_skills import get_skills
+from python_codes.test4 import extract_numbers,extract_age
+from python_codes.extract_degree import get_degree,unique_degrees,get_highest_degree
 import pandas as pd
 import numpy as np
 import re
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-nltk.download(['stopwords','wordnet'])
+#nltk.download(['stopwords','wordnet'])
 
 #warning
 import warnings
