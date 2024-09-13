@@ -23,7 +23,7 @@ warnings.filterwarnings('ignore')
 df = pd.read_csv("../resume dataset/Resume.csv")
 #df = df.reindex(np.random.permutation(df.index))
 data = df.copy().iloc[
-    0:200,
+    0:500,
 ]
 #data cleaned
 clean = []
@@ -60,7 +60,8 @@ final_data = pd.DataFrame({
     'ID-Person': data['ID'],  # استفاده از ستون ID موجود در data
     'Skills': skills,         # نتایج استخراج شده از فایل extract_skills.py
     'Age': ages,              # نتایج استخراج شده از فایل extract_age.py
-    'Degree': degrees         # نتایج استخراج شده از فایل extract_degree.py
+    'Degree': degrees,        # نتایج استخراج شده از فایل extract_degree.py
+    'Resume_str': data['Resume_str']
 })
 
 # نمایش یا ذخیره‌سازی دیتافریم نهایی
