@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Matching Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Top 5 Resume Matches</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Skills</th>
+                    <th>Age</th>
+                    <th>Degree</th>
+                    <th>Total Score (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    <!-- استفاده از فیلد صحیح 'ID-Person' و 'Resume_str' -->
+                    <td><a href="#" class="open-modal" data-id="{{ result['ID-Person'] }}" data-resume="{{ result['Resume_str'] }}">{{ result['ID-Person'] }}</a></td>
+                    <td>{{ result['Skills'] }}</td>
+                    <td>{{ result['Age'] }}</td>
+                    <td>{{ result['Degree'] }}</td>
+                    <td>{{ result['total_score'] }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/static" class="btn">Search Again</a>
+    </div>
+
+    <!-- Modal -->
+    <div id="resumeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Resume for ID: <span id="modalID"></span></h2>
+            <p id="modalResume"></p>
+        </div>
+    </div>
+
+    <script>
+        // باز کردن پنجره رزومه
+        document.querySelectorAll('.open-modal').forEach(function(element) {
+            element.addEventListener('click', function(event) {
+                event.preventDefault(); // جلوگیری از لود دوباره صفحه
+                const id = event.target.getAttribute('data-id');
+                const resume = event.target.getAttribute('data-resume');
+
+                document.getElementById('modalID').textContent = id;
+                document.getElementById('modalResume').textContent = resume;
+
+                document.getElementById('resumeModal').style.display = 'block';
+            });
+        });
+
+        // بستن پنجره رزومه
+        function closeModal() {
+            document.getElementById('resumeModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

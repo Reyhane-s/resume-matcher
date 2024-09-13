@@ -2,7 +2,7 @@ import sys
 import os
 
 # اضافه کردن مسیر پروژه به مسیرهای Python
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from python_codes.extract_skills import get_skills
 from python_codes.test4 import extract_numbers,extract_age
@@ -18,9 +18,15 @@ from nltk.stem import WordNetLemmatizer
 #warning
 import warnings
 warnings.filterwarnings('ignore')
+# مسیر پایه پروژه
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+# استفاده از مسیر مطلق برای فایل CSV
+csv_file_path = os.path.join(BASE_DIR,"..", 'resume dataset', 'Resume.csv')
+df = pd.read_csv(csv_file_path)
 
 #data uplouded
-df = pd.read_csv("../resume dataset/Resume.csv")
+#df = pd.read_csv("../resume dataset/Resume.csv")
 #df = df.reindex(np.random.permutation(df.index))
 data = df.copy().iloc[
     0:500,

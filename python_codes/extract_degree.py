@@ -10,7 +10,7 @@ import re
 #from nltk.corpus import stopwords
 #from nltk.stem import WordNetLemmatizer
 #nltk.download(['stopwords','wordnet'])
-
+import os
 #warning
 #import warnings
 #warnings.filterwarnings('ignore')
@@ -20,8 +20,10 @@ import re
 #    0:200,
 #]
 #print(data.head())
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 nlp = spacy.load("en_core_web_lg")
-age_pattern_path = "../pattern dataset/certification.jsonl"
+age_pattern_path = os.path.join(BASE_DIR,'..', 'pattern dataset', 'certification.jsonl')
+#age_pattern_path = "../pattern dataset/certification.jsonl"
 ruler = nlp.add_pipe("entity_ruler")
 ruler.from_disk(age_pattern_path)
 #print(nlp.pipe_names)

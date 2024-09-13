@@ -26,7 +26,7 @@ import re
 #from nltk.corpus import stopwords
 #from nltk.stem import WordNetLemmatizer
 #nltk.download(['stopwords','wordnet'])
-
+import os
 #warning
 #import warnings
 #warnings.filterwarnings('ignore')
@@ -40,7 +40,14 @@ import re
 #]
 #print(data.head())
 nlp = spacy.load("en_core_web_lg")
-skill_pattern_path = "../pattern dataset/jz_skill_patterns.jsonl"
+# مسیر پایه پروژه
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+# استفاده از مسیر مطلق برای فایل CSV
+skill_pattern_path = os.path.join(BASE_DIR,'..', 'pattern dataset', 'jz_skill_patterns.jsonl')
+#df = pd.read_csv(csv_file_path)
+
+#skill_pattern_path = "../pattern dataset/jz_skill_patterns.jsonl"
 ruler = nlp.add_pipe("entity_ruler")
 ruler.from_disk(skill_pattern_path)
 #print(nlp.pipe_names)

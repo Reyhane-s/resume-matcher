@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Matching</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Resume Matching System</h1>
+        <form action="/results" method="POST">
+            <label for="skills">Skills:</label>
+            <input type="text" id="skills" name="skills" placeholder="Enter skills (e.g. Python, Data Science)">
+
+            <label for="min_age">Minimum Age (15-65):</label>
+            <input type="number" id="min_age" name="min_age" min="15" max="65" placeholder="Minimum Age">
+
+            <label for="max_age">Maximum Age (15-65):</label>
+            <input type="number" id="max_age" name="max_age" min="15" max="65" placeholder="Maximum Age">
+
+            <label for="degree">Degree:</label>
+            <select id="degree" name="degree">
+                <option value="high school">High School</option>
+                <option value="associate">Associate</option>
+                <option value="bachelor">Bachelor</option>
+                <option value="master">Master</option>
+                <option value="phd">PhD</option>
+                <option value="postdoc">Postdoc</option>
+            </select>
+
+            <label for="skill_weight">Skill Weight (0-1):</label>
+            <input type="number" id="skill_weight" name="skill_weight" min="0" max="1" step="0.01" value="0.85" oninput="adjustWeights()">
+
+            <label for="age_weight">Age Weight (0-1):</label>
+            <input type="number" id="age_weight" name="age_weight" min="0" max="1" step="0.01" value="0.05" oninput="adjustWeights()">
+
+            <label for="degree_weight">Degree Weight (0-1):</label>
+            <input type="number" id="degree_weight" name="degree_weight" min="0" max="1" step="0.01" value="0.1" oninput="adjustWeights()">
+
+            <input type="submit" value="Search" class="btn">
+        </form>
+    </div>
+
+    <script>
+        function adjustWeights() {
+            const skillWeightInput = document.getElementById('skill_weight');
+            const ageWeightInput = document.getElementById('age_weight');
+            const degreeWeightInput = document.getElementById('degree_weight');
+
+            const skillWeight = parseFloat(skillWeightInput.value) || 0;
+            const ageWeight = parseFloat(ageWeightInput.value) || 0;
+            const degreeWeight = parseFloat(degreeWeightInput.value) || 0;
+
+            const totalWeight = skillWeight + ageWeight + degreeWeight;
+
+            if (totalWeight > 1) {
+                const excess = totalWeight - 1;
+
+                if (ageWeight > degreeWeight) {
+                    ageWeightInput.value = (ageWeight - excess).toFixed(2);
+                } else {
+                    degreeWeightInput.value = (degreeWeight - excess).toFixed(2);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
