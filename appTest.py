@@ -1,9 +1,14 @@
 import sys
 import os
+
+# اضافه کردن مسیر پروژه به مسیرهای Python
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+
+from python_codes.result_dataframe import final_data
 from flask import Flask, render_template, request
 import pandas as pd
 from spacy import load
-from python_codes.result_dataframe import final_data  # Import your final_data after it's been created
 
 app = Flask(__name__)
 
@@ -53,7 +58,6 @@ def calculate_total_score(skill_score, age_score, degree_score, skill_weight=0.8
     return (skill_score * skill_weight) + (age_score * age_weight) + (degree_score * degree_weight)
 
 
-# Load final_data once at the start of the application
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -70,7 +74,7 @@ def results():
     age_weight = float(request.form['age_weight'])
     degree_weight = float(request.form['degree_weight'])
 
-    df = pd.DataFrame(final_data)  # Use the already loaded final_data
+    df = pd.DataFrame(final_data)
 
     df['skill_score'] = df['Skills'].apply(lambda x: calculate_skill_similarity(user_skills, x))
     df['age_score'] = df['Age'].apply(lambda x: calculate_age_score(required_age_range, x))

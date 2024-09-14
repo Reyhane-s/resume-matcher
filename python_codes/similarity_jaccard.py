@@ -29,4 +29,3 @@ for idx, similarity in top_5:
     print(f"Row index: {idx}, Similarity: {similarity*100:.2f}%")
     print(f"Common skills: {list(common_skills)}")
     print(ex.data.loc[idx].to_dict())
-    print()

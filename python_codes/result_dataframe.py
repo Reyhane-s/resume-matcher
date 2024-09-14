@@ -5,12 +5,12 @@ import os
 #sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from python_codes.extract_skills import get_skills
-from python_codes.test4 import extract_numbers,extract_age
+from python_codes.extract_age import extract_numbers,extract_age
 from python_codes.extract_degree import get_degree,unique_degrees,get_highest_degree
 import pandas as pd
-import numpy as np
+
 import re
-import nltk
+
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 #nltk.download(['stopwords','wordnet'])
@@ -25,9 +25,7 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 csv_file_path = os.path.join(BASE_DIR,"..", 'resume dataset', 'Resume.csv')
 df = pd.read_csv(csv_file_path)
 
-#data uplouded
-#df = pd.read_csv("../resume dataset/Resume.csv")
-#df = df.reindex(np.random.permutation(df.index))
+
 data = df.copy().iloc[
     0:500,
 ]
@@ -65,13 +63,16 @@ degrees = degrees.apply(get_highest_degree)
 final_data = pd.DataFrame({
     'ID-Person': data['ID'],  # استفاده از ستون ID موجود در data
     'Skills': skills,         # نتایج استخراج شده از فایل extract_skills.py
-    'Age': ages,              # نتایج استخراج شده از فایل extract_age.py
+    'Age': ages,              # نتایج استخراج شده از فایل extract_age1.py
     'Degree': degrees,        # نتایج استخراج شده از فایل extract_degree.py
     'Resume_str': data['Resume_str']
 })
+# ذخیره final_data به عنوان فایل CSV در پوشه result dataset
+csv_save_path = os.path.join(BASE_DIR, '..', 'resume dataset', 'final_data.csv')
+final_data.to_csv(csv_save_path, index=False)
 
-# نمایش یا ذخیره‌سازی دیتافریم نهایی
-#print(final_data['ID-Person'])
-#print(final_data['Skills'])
-#print(final_data['Age'])
-#print(final_data['Degree'])
+#print(type(final_data['ID-Person']))
+#print(type(final_data['Skills']))
+#print(type(final_data['Age']))
+#print(type(final_data['Degree']))
+#print(type(final_data['Resume_str']))

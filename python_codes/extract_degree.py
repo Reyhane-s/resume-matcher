@@ -1,32 +1,15 @@
 #spacy
 import spacy
-#Data loading/ Data manipulation
-import pandas as pd
-import numpy as np
 
-#nltk
-import re
-#import nltk
-#from nltk.corpus import stopwords
-#from nltk.stem import WordNetLemmatizer
-#nltk.download(['stopwords','wordnet'])
 import os
-#warning
-#import warnings
-#warnings.filterwarnings('ignore')
-#df = pd.read_csv("../resume dataset/Resume.csv")
-#df = df.reindex(np.random.permutation(df.index))
-#data = df.copy().iloc[
-#    0:200,
-#]
-#print(data.head())
+
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 nlp = spacy.load("en_core_web_lg")
 age_pattern_path = os.path.join(BASE_DIR,'..', 'pattern dataset', 'certification.jsonl')
-#age_pattern_path = "../pattern dataset/certification.jsonl"
+
 ruler = nlp.add_pipe("entity_ruler")
 ruler.from_disk(age_pattern_path)
-#print(nlp.pipe_names)
+
 def get_degree(text):
     doc = nlp(text)
     myset = []
@@ -87,28 +70,3 @@ def get_highest_degree(degrees):
 
 
 
-
-#clean = []
-#for i in range(data.shape[0]):
-#    review = re.sub(
- #       '(@[A-Za-z]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)|^rt|http.+?"',  # اصلاح الگو برای حفظ اعداد
- #       " ",
-#        data["Resume_str"].iloc[i],
-#    )
-#    review = review.lower()
-#    review = review.split()
-#    lm = WordNetLemmatizer()
-#    review = [
-#        lm.lemmatize(word)
-#        for word in review
- #       if not word in set(stopwords.words("english"))
- #   ]
- #   review = " ".join(review)
-#    clean.append(review)
-
-#data["Clean_Resume"] = clean
-#data["degree"] = data["Clean_Resume"].str.lower().apply(get_degree)
-#data["degree"] = data["degree"].apply(unique_degrees)
-#data["degree"] = data["degree"].apply(get_highest_degree)
-
-#print(data["degree"].iloc[1:20])
