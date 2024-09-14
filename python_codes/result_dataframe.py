@@ -63,7 +63,7 @@ degrees = degrees.apply(get_highest_degree)
 final_data = pd.DataFrame({
     'ID-Person': data['ID'],  # استفاده از ستون ID موجود در data
     'Skills': skills,         # نتایج استخراج شده از فایل extract_skills.py
-    'Age': ages,              # نتایج استخراج شده از فایل extract_age1.py
+    'Age': ages,              # نتایج استخراج شده از فایل extract_age.py
     'Degree': degrees,        # نتایج استخراج شده از فایل extract_degree.py
     'Resume_str': data['Resume_str']
 })
@@ -71,8 +71,3 @@ final_data = pd.DataFrame({
 csv_save_path = os.path.join(BASE_DIR, '..', 'resume dataset', 'final_data.csv')
 final_data.to_csv(csv_save_path, index=False)
 
-#print(type(final_data['ID-Person']))
-#print(type(final_data['Skills']))
-#print(type(final_data['Age']))
-#print(type(final_data['Degree']))
-#print(type(final_data['Resume_str']))

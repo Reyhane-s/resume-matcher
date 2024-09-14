@@ -3,12 +3,31 @@ import os
 from flask import Flask, render_template, request
 import pandas as pd
 from spacy import load
-from python_codes.result_dataframe import final_data  # Import your final_data after it's been created
+import os.path
 
 app = Flask(__name__)
 
 # بارگذاری مدل Spacy
 nlp = load("en_core_web_md")
+
+# مسیر فایل final_data.csv
+final_data_csv_path = os.path.join(os.path.dirname(__file__), 'resume dataset', 'final_data.csv')
+
+# بررسی وجود فایل final_data.csv
+# Load final_data from CSV if it exists
+if os.path.exists(final_data_csv_path):
+    # اگر فایل وجود داشت، داده‌ها را از فایل CSV بارگذاری کن
+    final_data = pd.read_csv(final_data_csv_path)
+
+    # تنظیم نوع داده‌های ستون‌ها برای اطمینان از هماهنگی با داده‌های اصلی
+    final_data['Skills'] = final_data['Skills'].apply(eval)  # تبدیل رشته به لیست
+    final_data['Age'] = final_data['Age'].astype(float)      # تبدیل نوع داده به عددی
+    final_data['Degree'] = final_data['Degree'].astype(str)  # تبدیل به رشته
+else:
+    # اگر فایل CSV وجود نداشت، از کد result_dataframe برای تولید داده‌ها استفاده کن
+    from python_codes.result_dataframe import final_data
+    # ذخیره‌سازی داده‌ها در فایل CSV برای استفاده‌های بعدی
+    final_data.to_csv(final_data_csv_path, index=False)
 
 
 # تعریف توابع نمره‌دهی
@@ -53,7 +72,6 @@ def calculate_total_score(skill_score, age_score, degree_score, skill_weight=0.8
     return (skill_score * skill_weight) + (age_score * age_weight) + (degree_score * degree_weight)
 
 
-# Load final_data once at the start of the application
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -70,21 +88,35 @@ def results():
     age_weight = float(request.form['age_weight'])
     degree_weight = float(request.form['degree_weight'])
 
-    df = pd.DataFrame(final_data)  # Use the already loaded final_data
+    df = pd.DataFrame(final_data)
 
+    # جایگزینی مقادیر NaN با 0 برای محاسبه
+    df['Skills'].fillna('', inplace=True)
+    df['Age'].fillna(0, inplace=True)
+    df['Degree'].fillna('', inplace=True)
+
+    # محاسبات نمره‌دهی
     df['skill_score'] = df['Skills'].apply(lambda x: calculate_skill_similarity(user_skills, x))
     df['age_score'] = df['Age'].apply(lambda x: calculate_age_score(required_age_range, x))
     df['degree_score'] = df['Degree'].apply(lambda x: calculate_degree_score(required_degree, x))
 
+    # محاسبه نمره کل
     df['total_score'] = df.apply(lambda row: calculate_total_score(
         row['skill_score'], row['age_score'], row['degree_score'], skill_weight, age_weight, degree_weight), axis=1)
 
+    # مرتب‌سازی و انتخاب ۵ نفر برتر
     df_sorted = df.sort_values(by='total_score', ascending=False)
     top_5_matches = df_sorted[['ID-Person', 'Skills', 'Age', 'Degree', 'total_score', 'Resume_str']].head(5)
 
-    top_5_matches['total_score'] = (top_5_matches['total_score'] * 100).round(2)
+    # تبدیل سن به عدد صحیح
+    top_5_matches['Age'] = top_5_matches['Age'].astype(int)
+
+    # تبدیل ۰ و NaN به 'No Information'
     top_5_matches.fillna("No Information", inplace=True)
     top_5_matches.replace(0, "No Information", inplace=True)
+
+    # تبدیل نمره کل به درصد
+    top_5_matches['total_score'] = (top_5_matches['total_score'] * 100).round(2)
 
     results = top_5_matches.to_dict(orient='records')
 
